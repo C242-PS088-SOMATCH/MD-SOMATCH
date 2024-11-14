@@ -52,7 +52,7 @@
         app:fabCustomSize="64dp"
         app:backgroundTint="@color/purple_500"
         android:layout_gravity="center|bottom"
-        android:layout_marginBottom="40dp"
+        android:layout_marginVertical="40dp"
         android:elevation="8dp"
         app:fabSize="auto"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
