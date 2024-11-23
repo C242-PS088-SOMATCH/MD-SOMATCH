@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.1"
+cameraCamera2Version = "1.4.0"
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -13,8 +14,13 @@ lifecycleViewmodelKtx = "2.8.7"
 materialVersion = "1.9.0"
 navigationFragmentKtx = "2.8.3"
 navigationUiKtx = "2.8.3"
+legacySupportV4 = "1.0.0"
+fragmentKtx = "1.8.5"
+cameraViewVersion = "1.4.0"
+cameraLifecycleVersion = "1.4.0"
 
 [libraries]
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2Version" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -27,7 +33,10 @@ androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifec
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 material-v190 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
-
+androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "cameraViewVersion" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "cameraLifecycleVersion" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
