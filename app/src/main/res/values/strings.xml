@@ -36,4 +36,7 @@
     <string name="hai_user">Hai, User!</string>
     <string name="style_for_you">Style fashion untuk kamu</string>
     <string name="product_list">Daftar Produk</string>
+    <string name="product_title">Basic Shirt</string>
+    <string name="hastag">#warna putih</string>
+    <string name="deskripsi">baju kemeja</string>
 </resources>
