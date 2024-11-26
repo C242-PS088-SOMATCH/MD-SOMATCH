@@ -1,4 +1,4 @@
-package com.example.somatchapp.ui.card_adapter
+package com.example.somatchapp.ui.components.cards
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.somatchapp.R
 
-class HorizonCardAdapter : Fragment() {
+class HorizonCardFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
