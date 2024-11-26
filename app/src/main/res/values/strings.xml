@@ -5,7 +5,6 @@
     <string name="title_notifications">Notifications</string>
     <string name="ai_button">AI Button</string>
     <string name="profile">Profile</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="horizon_card_image">horizon card image</string>
     <string name="coba">Coba</string>
@@ -36,4 +35,8 @@
     <string name="hai_user">Hai, User!</string>
     <string name="style_for_you">Style fashion untuk kamu</string>
     <string name="product_list">Daftar Produk</string>
+    <string name="number_example">3</string>
+    <string name="title_your_outfit">Pakaian milik kamu</string>
+    <string name="title_your_combination">Kombinasi pakaianmu</string>
+    <string name="add_outfits">Tambah Pakaian</string>
 </resources>
