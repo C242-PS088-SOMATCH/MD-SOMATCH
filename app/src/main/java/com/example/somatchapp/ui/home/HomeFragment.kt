@@ -9,16 +9,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.somatchapp.R
+import com.example.somatchapp.data.local.entity.TrendFashion
 import com.example.somatchapp.databinding.FragmentHomeBinding
+import com.example.somatchapp.ui.ai_match.ScannerFragmentDirections.Companion.actionScannerFragmentToMyCatalogFragment
 
 class HomeFragment : Fragment(R.layout.fragment_recommendation_scanner) {
 
     private var _binding: FragmentHomeBinding? = null
     private lateinit var navController: NavController
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -41,10 +42,26 @@ class HomeFragment : Fragment(R.layout.fragment_recommendation_scanner) {
         // Initialize NavController
         navController = findNavController()
 
+        // Setup RecyclerView
+        val trendList = listOf(
+            TrendFashion(R.drawable.image_monochrome_style, "Monokrom", "#Hitam #Putih"),
+            TrendFashion(R.drawable.image_pastel_style, "Pastel", "#Biru #Pink"),
+            TrendFashion(R.drawable.image_earthtone_style, "Earthtone", "#Hijau #Coklat")
+        )
+
+        val trendAdapter = TrendFashionAdapter(trendList)
+        binding.rvTrendList.apply {
+            adapter = trendAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        }
+
+        // Navigation example
         binding.myCatalogButton.setOnClickListener {
-            navController.navigate(R.id.action_navigation_home_to_myCatalogFragment)
+            val action = HomeFragmentDirections.actionNavigationHomeToMyCatalogFragment("empty")
+            navController.navigate(action)
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
