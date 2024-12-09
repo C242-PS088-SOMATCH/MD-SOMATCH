@@ -3,5 +3,5 @@
     android:shape="rectangle">
     <corners
         android:radius="800dp" /> <!-- Adjust the radius as needed -->
-    <solid android:color="?attr/colorPrimaryVariant" /> <!-- Use your desired color -->
+    <solid android:color="@color/purple_500" /> <!-- Use your desired color -->
 </shape>
