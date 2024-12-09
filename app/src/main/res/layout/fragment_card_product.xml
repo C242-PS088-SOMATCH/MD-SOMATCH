@@ -15,11 +15,11 @@
             android:id="@+id/product_image"
             android:layout_width="wrap_content"
             android:layout_height="180dp"
-            android:background="@drawable/card_round"
+            android:background="@drawable/bg_card_round"
             android:clipToOutline="true"
             android:adjustViewBounds="false"
             android:scaleType="centerCrop"
-            android:src="@drawable/recommendation_outfit_illustration"
+            android:src="@drawable/image_recommendation_outfit_illustration"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

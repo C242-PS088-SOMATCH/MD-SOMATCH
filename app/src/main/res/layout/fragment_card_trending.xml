@@ -15,9 +15,9 @@
             android:id="@+id/trend_image"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:background="@drawable/card_round"
+            android:background="@drawable/bg_card_round"
             android:clipToOutline="true"
-            android:src="@drawable/recommendation_outfit_illustration"
+            android:src="@drawable/image_recommendation_outfit_illustration"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,7 +25,7 @@
             android:id="@+id/transparent_layer"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:src="@drawable/trend_gradient"
+            android:src="@drawable/bg_trend_gradient"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
