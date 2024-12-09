@@ -4,7 +4,64 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MyCatalogFragment">
+    tools:context=".ui.my_catalog.MyCatalogFragment">
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.Circle"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:padding="4dp"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/purple_500"
+        android:elevation="16dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/button_add_outfits"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom"
+        android:elevation="10dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_button_add_catalog" >
+
+        <TextView
+            android:id="@+id/tv_add_catalog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_outfits"
+            android:textStyle="bold"
+            android:textColor="@color/purple_700"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        
+        <ImageView
+            android:id="@+id/icon_plus"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/ic_plus"
+            app:tint="@color/purple_700"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/tv_add_catalog"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+        
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:elevation="8dp"
+        android:background="@drawable/bg_rounded_full" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -20,6 +77,7 @@
                 android:name="com.example.somatchapp.ui.components.TopActionBarFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
@@ -64,6 +122,8 @@
                 android:id="@+id/rv_my_outfit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxHeight="340dp"
+                app:layout_constraintHeight_max="340dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginHorizontal="8dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -72,6 +132,43 @@
                 tools:listitem="@layout/fragment_card_my_outfit"
                 tools:spanCount="3"
                 tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="24dp"
+                android:paddingHorizontal="36dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_my_outfit" >
+
+                <ImageView
+                    android:id="@+id/icon_hint"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_hint"
+                    app:layout_constraintBottom_toTopOf="@id/hint_description"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="#DEDEDE" />
+
+                <TextView
+                    android:id="@+id/hint_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hint_description"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:textColor="#DEDEDE"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/icon_hint" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
