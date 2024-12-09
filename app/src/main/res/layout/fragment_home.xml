@@ -74,6 +74,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rv_trend_list" />
 
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/spin_kit"
+                style="@style/SpinKitView.Circle"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:padding="4dp"
+                android:layout_gravity="center"
+                app:SpinKit_Color="@color/purple_500"
+                android:elevation="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/rv_product_list"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_product_list"
                 android:layout_width="match_parent"
