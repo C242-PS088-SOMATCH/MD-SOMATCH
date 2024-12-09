@@ -1,5 +1,7 @@
-package com.example.somatchapp
+package com.example.somatchapp.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
@@ -7,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.example.somatchapp.R
 import com.example.somatchapp.databinding.ActivityMainBinding
+import com.example.somatchapp.ui.auth.LoginActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -19,6 +23,20 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val token = getTokenFromSharedPreferences(this)
+
+        // If there's no token, redirect the user to the login screen
+        if (token == null) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        } else {
+            // Token exists, proceed to home screen
+            setupNavigation()
+        }
+    }
+
+    private fun setupNavigation() {
         // Setup NavController
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
@@ -53,17 +71,22 @@ class MainActivity : AppCompatActivity() {
 
         // Set click listener for the FAB
         aiFAB.setOnClickListener {
-            // Navigate to the DeciderFragment
             navController.navigate(R.id.chooserFragment)
         }
 
         // Handle back press to navigate back in NavController
         onBackPressedDispatcher.addCallback(this) {
             if (navController.previousBackStackEntry != null) {
-                navController.popBackStack() // Go back to the previous destination
+                navController.popBackStack()
             } else {
-                finish() // Exit the app if no back stack is present
+                finish()
             }
         }
+    }
+
+    // Helper function to get the token from SharedPreferences
+    private fun getTokenFromSharedPreferences(context: Context): String? {
+        val sharedPreferences = context.getSharedPreferences("user_preferences", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("token", null)
     }
 }
