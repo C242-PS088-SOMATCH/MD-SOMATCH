@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Warna latar belakang -->
+    <solid android:color="#F9F1FF" /> <!-- Warna ungu muda -->
+
+    <!-- Sudut lengkung -->
+    <corners android:radius="12dp" />
+
+    <!-- Border -->
+    <stroke
+        android:width="2dp"
+        android:color="#D1C4E9" /> <!-- Warna border (ungu muda) -->
+</shape>

@@ -36,6 +36,11 @@
     <string name="hai_user">Hai, User!</string>
     <string name="style_for_you">Style fashion untuk kamu</string>
     <string name="product_list">Daftar Produk</string>
+
+    <string name="product_title">Basic Shirt</string>
+    <string name="hastag">#warna putih</string>
+    <string name="deskripsi">baju kemeja</string>
+
     <string name="number_example">3</string>
     <string name="title_your_outfit">Pakaian milik kamu</string>
     <string name="title_your_combination">Kombinasi pakaianmu</string>
@@ -59,4 +64,5 @@
     <string name="topwear">Atasan</string>
     <string name="bag">Tas</string>
     <string name="footwear">Alas Kaki</string>
+
 </resources>
