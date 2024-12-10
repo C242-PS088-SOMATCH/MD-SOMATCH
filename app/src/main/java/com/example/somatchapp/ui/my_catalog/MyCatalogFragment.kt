@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -143,7 +145,9 @@ class MyCatalogFragment : Fragment() {
                 Toast.makeText(requireContext(), "Item berhasil disimpan", Toast.LENGTH_SHORT).show()
 
                 // Navigate back
-                navController.navigateUp()
+                navController.popBackStack()
+                navController.popBackStack()
+
             } else {
                 // Show an error message if no item is selected
                 Toast.makeText(requireContext(), "Pilih item terlebih dahulu!", Toast.LENGTH_SHORT).show()

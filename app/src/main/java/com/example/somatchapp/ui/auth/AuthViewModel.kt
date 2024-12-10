@@ -3,8 +3,8 @@ package com.example.somatchapp.ui.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.somatchapp.data.UserRepository
-import com.example.somatchapp.data.remote.retrofit.LoginResponse
-import com.example.somatchapp.data.remote.retrofit.RegisterResponse
+import com.example.somatchapp.data.remote.response.LoginResponse
+import com.example.somatchapp.data.remote.response.RegisterResponse
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -29,10 +29,10 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
         }
     }
 
-    fun register(name: String, email: String, password: String, onResult: (Response<RegisterResponse>) -> Unit) {
+    fun register(name: String, email: String, username: String, password: String, onResult: (Response<RegisterResponse>) -> Unit) {
         viewModelScope.launch {
             try {
-                val response = userRepository.register(name, email, password)
+                val response = userRepository.register(name, username, email, password)
                 onResult(response)
             } catch (e: Exception) {
                 // Handle error

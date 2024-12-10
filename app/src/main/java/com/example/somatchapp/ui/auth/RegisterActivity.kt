@@ -54,12 +54,13 @@ class RegisterActivity : AppCompatActivity() {
 
         binding.buttonRegister.setOnClickListener {
             val username = binding.etUsername.text.toString().trim()
+            val name = username
             val email = binding.etEmail.text.toString().trim()
             val password = binding.etsPassword.text.toString().trim()
 
             binding.constraintProgressBar.visibility = View.VISIBLE
             // Call register function
-            register(username, email, password)
+            register(name, username, email, password)
         }
     }
 
@@ -96,10 +97,10 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     // Register the user by calling the API
-    private fun register(username: String, email: String, password: String) {
+    private fun register(name: String, username: String, email: String, password: String) {
         // Show a loading indicator if needed (optional)
 
-        userViewModel.register(username, email, password) { response ->
+        userViewModel.register(name, username, email, password) { response ->
             binding.constraintProgressBar.visibility = View.GONE
             if (response.isSuccessful) {
                 // Handle success

@@ -5,8 +5,10 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -36,7 +38,7 @@ class ScannerFragment : Fragment(R.layout.fragment_recommendation_scanner) {
     private lateinit var navController: NavController
 
     private var imageCapture: ImageCapture? = null
-    private var savedUri: Uri? = null // Update this dynamically after capturing an image
+    private var savedUri: Uri? = null // Update dynamically after capturing an image
 
     private lateinit var outfitStyleRepository: OutfitStyleRepository
     private lateinit var itemType: String
@@ -48,19 +50,18 @@ class ScannerFragment : Fragment(R.layout.fragment_recommendation_scanner) {
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize NavController
         navController = findNavController()
 
         _binding = FragmentRecommendationScannerBinding.bind(view)
 
-        // Get arguments for item type and title
+        // Get arguments
         itemType = ScannerFragmentArgs.fromBundle(requireArguments()).itemType
         itemTitle = ScannerFragmentArgs.fromBundle(requireArguments()).itemTitle
 
-        // Initialize repository and ViewModel
+        // Initialize repository
         val database = OutfitStyleRoomDatabase.getDatabase(requireContext())
         outfitStyleRepository = OutfitStyleRepository(database.outfitStyleDao())
 
@@ -72,17 +73,19 @@ class ScannerFragment : Fragment(R.layout.fragment_recommendation_scanner) {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
 
-        // Set the click listener for the camera button
-        binding.cameraButton.setOnClickListener {
-            takePhoto()
-        }
+        binding.cameraButton.setOnClickListener { takePhoto() }
+        binding.galleryButton.setOnClickListener { openGallery() }
+        binding.arrowBack.setOnClickListener { findNavController().navigateUp() }
 
-        binding.galleryButton.setOnClickListener {
-            openGallery()
-        }
+        // Initialize buttonSave as hidden
+        binding.buttonSave.visibility = View.GONE
 
-        binding.arrowBack.setOnClickListener {
-            findNavController().navigateUp()
+        // Set the buttonSave click listener
+        binding.buttonSave.setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                saveImageToDatabase()
+                findNavController().navigateUp()
+            }
         }
 
         binding.buttonMyCatalog.setOnClickListener {
@@ -90,19 +93,25 @@ class ScannerFragment : Fragment(R.layout.fragment_recommendation_scanner) {
             navController.navigate(action)
         }
 
-        // Bind the page_title and change its text to itemType
-        binding.pageTitle.text = "Ambil Gambar ${itemTitle?.replaceFirstChar { it.uppercase() } ?: "Ambil Gambar"}"
+        binding.pageTitle.text = "Ambil Gambar ${itemTitle.replaceFirstChar { it.uppercase() }}"
+        binding.displayImage.visibility = View.GONE // Hide ImageView initially
     }
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
-                startCamera()
+                val permission = getGalleryPermission()
+                if (permission == Manifest.permission.CAMERA) {
+                    startCamera()
+                } else {
+                    openGallery()
+                }
             } else {
-                Toast.makeText(requireContext(), "Camera permission is required", Toast.LENGTH_SHORT).show()
+                val permissionType =
+                    if (getGalleryPermission() == Manifest.permission.CAMERA) "Camera" else "Gallery"
+                Toast.makeText(requireContext(), "$permissionType permission is required", Toast.LENGTH_SHORT).show()
             }
         }
-
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
@@ -147,16 +156,9 @@ class ScannerFragment : Fragment(R.layout.fragment_recommendation_scanner) {
                     Log.e("ScannerFragment", "Photo capture failed: ${exc.message}", exc)
                 }
 
-                // Menggunakan lifecycleScope.launch untuk menjalankan kode yang membutuhkan penundaan
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    // Update savedUri and set the ImageView source
                     savedUri = Uri.fromFile(photoFile)
-                    displayCapturedImage()
-
-                    // Launch coroutine save image data into database
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        saveImageToDatabase()
-                    }
+                    displayImage()
                 }
             }
         )
@@ -166,36 +168,36 @@ class ScannerFragment : Fragment(R.layout.fragment_recommendation_scanner) {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
                 savedUri = it
-                displaySelectedImage()
+                displayImage()
             }
         }
 
     private fun openGallery() {
-        galleryLauncher.launch("image/*")
-    }
-
-    // Menangani hasil dari galeri
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == GALLERY_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK) {
-            // Mendapatkan URI gambar yang dipilih
-            data?.data?.let { uri ->
-                savedUri = uri
-                displaySelectedImage()
-            }
+        val galleryPermission = getGalleryPermission()
+        if (ContextCompat.checkSelfPermission(requireContext(), galleryPermission)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            // Izin diberikan, buka galeri
+            galleryLauncher.launch("image/*")
+        } else {
+            // Minta izin
+            requestPermissionLauncher.launch(galleryPermission)
         }
     }
 
-    private fun displaySelectedImage() {
-        savedUri?.let {
-            binding.buttonMyCatalog.setImageURI(it)
+    private fun getGalleryPermission(): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            Manifest.permission.READ_EXTERNAL_STORAGE
         }
     }
 
-    private fun displayCapturedImage() {
+    private fun displayImage() {
         savedUri?.let {
-            binding.buttonMyCatalog.setImageURI(it)
+            binding.displayImage.setImageURI(it) // Display the image
+            binding.displayImage.visibility = View.VISIBLE
+            binding.buttonSave.visibility = View.VISIBLE // Show save button
         }
     }
 
@@ -205,9 +207,11 @@ class ScannerFragment : Fragment(R.layout.fragment_recommendation_scanner) {
                 type = itemType,
                 image = uri.toString()
             )
-
             outfitStyleRepository.insert(outfitStyle)
             Toast.makeText(requireContext(), "Image saved to database", Toast.LENGTH_SHORT).show()
+
+            // Hide save button after saving
+            binding.buttonSave.visibility = View.GONE
         }
     }
 

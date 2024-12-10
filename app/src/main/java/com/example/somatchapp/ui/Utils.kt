@@ -1,43 +1,40 @@
-package com.example.somatchapp.ui
+package com.example.utils
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import java.io.ByteArrayOutputStream
+import android.util.Log
 import java.io.File
 import java.io.FileOutputStream
+import java.io.InputStream
 
-private const val FILENAME_FORMAT = "yyyyMMdd_HHmmss"
+object ScannerUtils {
 
-fun compressImage(context: Context, imageUri: Uri, maxSizeInMB: Int = 1): File? {
-    // Maximum size in byte
-    val maxSizeInBytes = maxSizeInMB * 1024 * 1024
+    fun compressImage(context: Context, uri: Uri, maxFileSize: Long = 1_000_000): Uri? {
+        try {
+            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+            inputStream?.close()
 
-    val inputStream = context.contentResolver.openInputStream(imageUri)
-    val originalBitmap = BitmapFactory.decodeStream(inputStream)
-    inputStream?.close()
+            var compressQuality = 100
+            var streamLength: Int
+            val compressedFile = File(context.cacheDir, "compressed_image.jpg")
+            do {
+                val outputStream = FileOutputStream(compressedFile)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, outputStream)
+                outputStream.flush()
+                outputStream.close()
 
-    // Compress the bitmap
-    var compressedFile: File? = null
-    var quality = 100
-    do {
-        val outputStream = ByteArrayOutputStream()
-        originalBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
-        val byteArray = outputStream.toByteArray()
-        outputStream.close()
+                streamLength = compressedFile.length().toInt()
+                compressQuality -= 5
+            } while (streamLength > maxFileSize && compressQuality > 5)
 
-        if (byteArray.size <= maxSizeInBytes || quality <= 10) {
-            // Save compressed bitmap to file
-            compressedFile = File(context.cacheDir, "compressed_image_${System.currentTimeMillis()}.jpg")
-            FileOutputStream(compressedFile).use { fos ->
-                fos.write(byteArray)
-                fos.flush()
-            }
-            break
+            Log.d("ScannerUtils", "Image compressed to size: $streamLength bytes")
+            return Uri.fromFile(compressedFile)
+        } catch (e: Exception) {
+            Log.e("ScannerUtils", "Image compression failed", e)
         }
-        quality -= 10
-    } while (quality > 0)
-
-    return compressedFile
+        return null
+    }
 }

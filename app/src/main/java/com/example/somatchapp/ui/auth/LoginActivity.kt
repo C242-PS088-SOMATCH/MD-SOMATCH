@@ -12,8 +12,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.example.somatchapp.data.UserRepository
+import com.example.somatchapp.data.remote.response.LoginResponse
 import com.example.somatchapp.data.remote.retrofit.ApiConfig
-import com.example.somatchapp.data.remote.retrofit.LoginResponse
 import com.example.somatchapp.databinding.ActivityLoginBinding
 import com.example.somatchapp.ui.MainActivity
 import retrofit2.Response
@@ -46,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
         binding.constraintProgressBar.visibility = View.GONE
 
         binding.tvRegister.setOnClickListener {
-            navigateToMain()
+            navigateToRegister()
         }
 
         binding.etEmail.addTextChangedListener { validateInputs() }
