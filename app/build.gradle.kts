@@ -61,6 +61,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation (libs.material.v190)
+
     implementation (libs.guava)
 
     implementation (libs.ybq.android.spinkit)
