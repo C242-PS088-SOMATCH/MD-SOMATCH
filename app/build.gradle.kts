@@ -57,4 +57,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation (libs.material.v190)
+    implementation ("com.google.android.material:material:1.9.0")
+
 }
