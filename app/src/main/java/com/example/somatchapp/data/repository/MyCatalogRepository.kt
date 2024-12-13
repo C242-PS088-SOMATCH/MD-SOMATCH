@@ -1,17 +1,47 @@
 package com.example.somatchapp.data.repository
 
-import androidx.lifecycle.LiveData
-import com.example.somatchapp.data.local.room.MyCatalogDao
-import com.example.somatchapp.data.local.entity.MyCatalog
+import android.content.Context
+import com.example.somatchapp.data.remote.response.AllItemResponse
 import com.example.somatchapp.data.remote.response.MyCatalogResponse
+import com.example.somatchapp.data.remote.response.UploadImageResponse
 import com.example.somatchapp.data.remote.retrofit.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MyCatalogRepository(private val myCatalogDao: MyCatalogDao, private val apiService: ApiService) {
+class MyCatalogRepository(private val apiService: ApiService) {
+
+    suspend fun getAllItems(context: Context): Result<List<AllItemResponse>> {
+        return try {
+            val token = getTokenFromSharedPreferences(context) ?: ""
+            // Make the network call asynchronously
+            val response = withContext(Dispatchers.IO) {
+                apiService.getAllItem("Bearer $token").execute()
+            }
+
+            if (response.isSuccessful) {
+                // Extract the 'data' from ItemsResponse and return it
+                val itemsResponse = response.body()
+                if (itemsResponse != null) {
+                    Result.success(itemsResponse.data)
+                } else {
+                    Result.failure(Exception("Empty response data"))
+                }
+            } else {
+                Result.failure(Exception("Error: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    private fun getTokenFromSharedPreferences(context: Context): String? {
+        val sharedPreferences = context.getSharedPreferences("user_preferences", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("token", null)
+    }
 
     fun getMyCatalog(token: String, onResult: (Result<MyCatalogResponse>) -> Unit) {
         val call = apiService.getMyCatalog("Bearer $token")
@@ -39,47 +69,12 @@ class MyCatalogRepository(private val myCatalogDao: MyCatalogDao, private val ap
         })
     }
 
-    // Get all catalog items
-    val allMyCatalog: LiveData<List<MyCatalog>> = myCatalogDao.getAllMyCatalog()
-
-    // Get catalog item by ID
-    fun getMyCatalogById(id: Int): LiveData<MyCatalog?> = myCatalogDao.getMyCatalogById(id)
-
-    // Get all out-of-style catalog items
-    val allOutOfStyle: LiveData<List<MyCatalog>> = myCatalogDao.getAllOutOfStyle()
-
-    // Insert a single catalog item
-    suspend fun insert(myCatalog: MyCatalog) {
-        withContext(Dispatchers.IO) {
-            myCatalogDao.insert(myCatalog)
-        }
+    suspend fun uploadImageToMyCatalog(
+        bearerToken: String,
+        image: MultipartBody.Part,
+        type: String
+    ): Response<UploadImageResponse> {
+        return apiService.uploadImageToMyCatalog(bearerToken, image, type)
     }
 
-    // Insert multiple catalog items
-    suspend fun insertAll(myCatalogList: List<MyCatalog>) {
-        withContext(Dispatchers.IO) {
-            myCatalogDao.insertAll(myCatalogList)
-        }
-    }
-
-    // Update a catalog item
-    suspend fun update(myCatalog: MyCatalog) {
-        withContext(Dispatchers.IO) {
-            myCatalogDao.update(myCatalog)
-        }
-    }
-
-    // Delete a catalog item
-    suspend fun delete(myCatalog: MyCatalog) {
-        withContext(Dispatchers.IO) {
-            myCatalogDao.delete(myCatalog)
-        }
-    }
-
-    // Delete all catalog items
-    suspend fun deleteAll() {
-        withContext(Dispatchers.IO) {
-            myCatalogDao.deleteAll()
-        }
-    }
 }

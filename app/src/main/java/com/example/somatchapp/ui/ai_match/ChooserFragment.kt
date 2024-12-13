@@ -55,13 +55,13 @@ class ChooserFragment : Fragment() {
                 imageResId = R.drawable.image_recommendation_outfit_illustration,
                 title = "Rekomendasi pakaian",
                 description = "Kami merekomendasikan item yang belum kamu miliki",
-                navigateLink = R.id.action_deciderFragment_to_recommendationStylingFragment
+                navigateLink = R.id.action_decider_fragment_to_recommendation_styling_fragment
             ),
             ChooserCardData(
                 imageResId = R.drawable.image_prediction_percentage_illustration,
                 title = "Prediksi kecocokan",
                 description = "Kami akan memprediksi kecocokan pakaian kamu",
-                navigateLink = R.id.action_chooserFragment_to_predictionStylingFragment
+                navigateLink = R.id.action_chooser_fragment_to_prediction_styling_fragment
             )
         )
 

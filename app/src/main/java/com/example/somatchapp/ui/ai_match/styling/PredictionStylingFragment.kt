@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.somatchapp.R
 import com.example.somatchapp.data.local.OutfitStyleRoomDatabase
 import com.example.somatchapp.data.local.entity.OutfitStyle
@@ -34,7 +35,6 @@ class PredictionStylingFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -52,12 +52,17 @@ class PredictionStylingFragment : Fragment() {
         stylingViewModel.allOutfitStyles.observe(viewLifecycleOwner, Observer { outfitStyles ->
             // Update UI with the latest data
             updateUI(outfitStyles)
+
+            // Enable nextButton only if both upperwear and bottomwear have valid images
+            val hasUpperwearImage = outfitStyles.any { it.type == "upperwear" && it.image != null }
+            val hasBottomwearImage = outfitStyles.any { it.type == "bottomwear" && it.image != null }
+            binding.nextButton.isEnabled = hasUpperwearImage && hasBottomwearImage
         })
 
         setupClickListeners()
 
         binding.nextButton.setOnClickListener {
-            navController.navigate(R.id.action_recommendationStylingFragment_to_recommendationResultFragment)
+            navController.navigate(R.id.action_prediction_styling_fragment_to_predictionResultFragment)
         }
     }
 
@@ -66,10 +71,10 @@ class PredictionStylingFragment : Fragment() {
             navigateToScanner("bag", "Tas")
         }
         binding.ibTopwear.setOnClickListener {
-            navigateToScanner("top wear", "Atasan")
+            navigateToScanner("upperwear", "Atasan")
         }
         binding.ibBottomwear.setOnClickListener {
-            navigateToScanner("bottom wear", "Bawahan")
+            navigateToScanner("bottomwear", "Bawahan")
         }
         binding.ibAccessories.setOnClickListener {
             navigateToScanner("accessories", "Aksesoris")
@@ -94,8 +99,8 @@ class PredictionStylingFragment : Fragment() {
 
             when (outfitStyle.type) {
                 "bag" -> setImage(binding.ibBag, imageUri)
-                "top wear" -> setImage(binding.ibTopwear, imageUri)
-                "bottom wear" -> setImage(binding.ibBottomwear, imageUri)
+                "upperwear" -> setImage(binding.ibTopwear, imageUri)
+                "bottomwear" -> setImage(binding.ibBottomwear, imageUri)
                 "accessories" -> setImage(binding.ibAccessories, imageUri)
                 "footwear" -> setImage(binding.ibFootwear, imageUri)
             }
@@ -105,19 +110,19 @@ class PredictionStylingFragment : Fragment() {
     private fun setImage(imageView: ImageView, imageUri: String?) {
         if (imageUri != null) {
             try {
-                // If imageUri is a path to the file, set the URI directly
                 val uri = Uri.parse(imageUri)
-                imageView.setImageURI(uri)
+                Glide.with(imageView.context)
+                    .load(uri)
+                    .placeholder(R.drawable.ic_blank_gallery)
+                    .into(imageView)
             } catch (e: Exception) {
-                // Handle error if the URI is invalid
                 e.printStackTrace()
+                imageView.setImageResource(R.drawable.ic_blank_gallery) // Fallback jika terjadi exception
             }
         } else {
-            // Fallback to a default image if no image URI is provided
-            imageView.setImageResource(R.drawable.ic_add_style)
+            imageView.setImageResource(R.drawable.ic_add_style) // Default jika URI null
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

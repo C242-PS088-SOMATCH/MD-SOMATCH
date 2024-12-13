@@ -1,6 +1,7 @@
 package com.example.somatchapp.ui.scanner
 
 import android.Manifest
+import android.content.Context.MODE_PRIVATE
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -26,7 +27,11 @@ import com.example.somatchapp.data.local.room.MyCatalogRoomDatabase
 import com.example.somatchapp.data.remote.retrofit.ApiConfig
 import com.example.somatchapp.data.repository.MyCatalogRepository
 import com.example.somatchapp.databinding.FragmentScannerBinding
+import com.example.utils.ScannerUtils
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -38,20 +43,14 @@ class CommonScannerFragment : Fragment(R.layout.fragment_scanner) {
     private lateinit var navController: NavController
     private var imageCapture: ImageCapture? = null
     private var savedUri: Uri? = null
+    private lateinit var selectedType: String
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
-                val permission = getGalleryPermission()
-                if (permission == Manifest.permission.CAMERA) {
-                    startCamera()
-                } else {
-                    openGallery() // Izin galeri diberikan, buka galeri
-                }
+                startCamera()
             } else {
-                val permissionType =
-                    if (getGalleryPermission() == Manifest.permission.CAMERA) "Camera" else "Gallery"
-                Toast.makeText(requireContext(), "$permissionType permission is required", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Camera permission is required", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -59,14 +58,9 @@ class CommonScannerFragment : Fragment(R.layout.fragment_scanner) {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
                 savedUri = it
-                displaySelectedImage() // Menampilkan gambar dari galeri
+                displaySelectedImage()
             }
         }
-
-    companion object {
-        private const val CAMERA_REQUEST_CODE = 1001
-        private const val GALLERY_REQUEST_CODE = 1002
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -84,24 +78,26 @@ class CommonScannerFragment : Fragment(R.layout.fragment_scanner) {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
 
+        binding.spinKit.visibility = View.GONE
+
         binding.cameraButton.setOnClickListener {
             takePhoto()
         }
 
         binding.galleryButton.setOnClickListener {
-            val galleryPermission = getGalleryPermission()
-            if (ContextCompat.checkSelfPermission(requireContext(), galleryPermission)
+            // Check for gallery permission
+            if (ContextCompat.checkSelfPermission(requireContext(), getGalleryPermission())
                 == PackageManager.PERMISSION_GRANTED
             ) {
                 openGallery()
             } else {
-                // Minta izin akses galeri
-                requestPermissionLauncher.launch(galleryPermission)
+                requestPermissionLauncher.launch(getGalleryPermission())
             }
         }
 
         binding.saveButton.setOnClickListener {
-            saveImage()
+            binding.spinKit.visibility = View.VISIBLE
+            compressAndUploadImage()
         }
 
         binding.arrowBack.setOnClickListener {
@@ -110,20 +106,16 @@ class CommonScannerFragment : Fragment(R.layout.fragment_scanner) {
 
         binding.displayImage.visibility = View.GONE
 
-        // Data untuk dropdown
-        val options = listOf("Atasan", "Bawahan", "Tas", "Aksesoris", "Alas Kaki")
+        val options = listOf("upperwear", "bottomwear", "footwear", "bag", "hat")
 
-        // Buat adapter untuk Spinner
         val adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item, // Layout untuk item dropdown
             options
         ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
 
-        // Pasangkan adapter ke Spinner
         binding.spinnerDropdown.adapter = adapter
 
-        // Listener untuk item yang dipilih
         binding.spinnerDropdown.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -131,11 +123,10 @@ class CommonScannerFragment : Fragment(R.layout.fragment_scanner) {
                 position: Int,
                 id: Long
             ) {
+                selectedType = options[position]
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Do nothing
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
 
@@ -192,45 +183,69 @@ class CommonScannerFragment : Fragment(R.layout.fragment_scanner) {
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     savedUri = Uri.fromFile(photoFile)
-                    displayCapturedImage() // Menampilkan gambar dari kamera
+                    displayCapturedImage()
                 }
             }
         )
     }
 
     private fun openGallery() {
-        val galleryPermission = getGalleryPermission()
-        if (ContextCompat.checkSelfPermission(requireContext(), galleryPermission)
-            == PackageManager.PERMISSION_GRANTED
-        ) {
-            // Izin telah diberikan, buka galeri
-            galleryLauncher.launch("image/*")
-        } else {
-            // Minta izin akses galeri
-            requestPermissionLauncher.launch(galleryPermission)
-        }
+        galleryLauncher.launch("image/*")
     }
 
-    private fun saveImage() {
+    private fun compressAndUploadImage() {
         savedUri?.let { uri ->
-            val myCatalog = MyCatalog(
-                id = 0,
-                image = uri.toString(),
-                isSelected = false,
-                inStyle = false
-            )
+            // Tampilkan SpinKit saat proses dimulai
+            binding.spinKit.visibility = View.VISIBLE
 
-            val myCatalogRepository = MyCatalogRepository(
-                MyCatalogRoomDatabase.getDatabase(requireContext()).myCatalogDao(),
-                ApiConfig().getApiService()
-            )
+            // Kompres gambar menggunakan ScannerUtils
+            val compressedUri = ScannerUtils.compressImage(requireContext(), uri)
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                myCatalogRepository.insert(myCatalog)
-                Toast.makeText(requireContext(), "Image saved to catalog", Toast.LENGTH_SHORT).show()
+            if (compressedUri != null) {
+                val database = MyCatalogRoomDatabase.getDatabase(requireContext())
+                val sharedPreferences = requireContext().getSharedPreferences("user_preferences", MODE_PRIVATE)
+                val token = sharedPreferences.getString("token", null)
+
+                val file = File(compressedUri.path!!)
+                val apiService = ApiConfig().getApiService()
+                val repository = MyCatalogRepository(apiService)
+
+                // Membuat MultipartBody untuk unggah
+                val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
+                val imagePart = MultipartBody.Part.createFormData("image", file.name, requestBody)
+
+                // Mengunggah menggunakan repository
+                viewLifecycleOwner.lifecycleScope.launch {
+                    try {
+                        val response = repository.uploadImageToMyCatalog(
+                            "Bearer $token",
+                            imagePart,
+                            selectedType
+                        )
+                        if (response.isSuccessful) {
+                            Toast.makeText(requireContext(), "Image uploaded successfully!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(requireContext(), "Upload failed: ${response.message()}", Toast.LENGTH_SHORT).show()
+                        }
+                    } catch (e: Exception) {
+                        Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    } finally {
+                        // Sembunyikan SpinKit setelah proses selesai
+                        binding.spinKit.visibility = View.GONE
+                    }
+                }
+            } else {
+                // Sembunyikan SpinKit jika gagal kompres gambar
+                binding.spinKit.visibility = View.GONE
+                Toast.makeText(requireContext(), "Failed to compress image", Toast.LENGTH_SHORT).show()
             }
+        } ?: run {
+            // Sembunyikan SpinKit jika tidak ada gambar yang dipilih
+            binding.spinKit.visibility = View.GONE
+            Toast.makeText(requireContext(), "No image selected", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun displayCapturedImage() {
         savedUri?.let {

@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.example.somatchapp.R
@@ -25,68 +27,61 @@ class MainActivity : AppCompatActivity() {
 
         val token = getTokenFromSharedPreferences(this)
 
-        // If there's no token, redirect the user to the login screen
+        // Pastikan NavController diinisialisasi setelah layout
+        val navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment).navController
+
+        // Jika token tidak ada, navigasi ke StarterFragment dan sembunyikan UI
         if (token == null) {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
+            navController.navigate(R.id.starter_fragment)
+            setUIVisibility(View.GONE) // Menyembunyikan BottomNavigationView, FAB, dan AppBar
         } else {
-            // Token exists, proceed to home screen
-            setupNavigation()
-        }
-    }
-
-    private fun setupNavigation() {
-        // Setup NavController
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-
-        // Setup AppBarConfiguration for top-level destinations
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_profile
+            // Set up BottomNavigationView dengan NavController
+            val appBarConfiguration = AppBarConfiguration(
+                setOf(R.id.navigation_home, R.id.navigation_profile)
             )
-        )
+            binding.bottomNavigationView.setupWithNavController(navController)
 
-        // Setup BottomNavigationView with NavController
-        val navView: BottomNavigationView = binding.bottomNavigationView
-        navView.setupWithNavController(navController)
-
-        // Handle visibility of BottomNavigationView and FAB
-        val aiFAB = binding.aiFab
-        val bottAppBar = binding.bottomAppBar
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.navigation_home, R.id.navigation_profile -> {
-                    navView.visibility = View.VISIBLE
-                    aiFAB.visibility = View.VISIBLE
-                    bottAppBar.visibility = View.VISIBLE
-                }
-                else -> {
-                    navView.visibility = View.GONE
-                    aiFAB.visibility = View.GONE
-                    bottAppBar.visibility = View.GONE
+            // Handle perubahan visibilitas UI (BottomNavigationView, FAB, AppBar)
+            navController.addOnDestinationChangedListener { _, destination, _ ->
+                when (destination.id) {
+                    R.id.navigation_home, R.id.navigation_profile -> {
+                        setUIVisibility(View.VISIBLE) // Menampilkan UI di halaman ini
+                    }
+                    R.id.starter_fragment -> {
+                        setUIVisibility(View.GONE) // Menyembunyikan UI di StarterFragment
+                    }
+                    else -> {
+                        setUIVisibility(View.GONE) // Menyembunyikan UI di halaman lain
+                    }
                 }
             }
-        }
 
-        // Set click listener for the FAB
-        aiFAB.setOnClickListener {
-            navController.navigate(R.id.chooserFragment)
-        }
+            // Set click listener untuk FAB
+            binding.aiFab.setOnClickListener {
+                navController.navigate(R.id.ai_chooser_fragment)
+            }
 
-        // Handle back press to navigate back in NavController
-        onBackPressedDispatcher.addCallback(this) {
-            if (navController.previousBackStackEntry != null) {
-                navController.popBackStack()
-            } else {
-                finish()
+            // Menangani back press untuk menavigasi kembali di NavController
+            onBackPressedDispatcher.addCallback(this) {
+                if (navController.previousBackStackEntry != null) {
+                    navController.popBackStack()
+                } else {
+                    finish()
+                }
             }
         }
     }
 
-    // Helper function to get the token from SharedPreferences
+    // Helper function untuk mendapatkan token dari SharedPreferences
     private fun getTokenFromSharedPreferences(context: Context): String? {
         val sharedPreferences = context.getSharedPreferences("user_preferences", Context.MODE_PRIVATE)
         return sharedPreferences.getString("token", null)
+    }
+
+    // Fungsi untuk mengatur visibilitas UI
+    private fun setUIVisibility(visibility: Int) {
+        binding.bottomNavigationView.visibility = visibility
+        binding.aiFab.visibility = visibility
+        binding.bottomAppBar.visibility = visibility
     }
 }

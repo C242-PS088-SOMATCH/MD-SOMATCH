@@ -7,8 +7,15 @@ import kotlinx.parcelize.Parcelize
 data class MyCatalogResponse (
     val error: Boolean,
     val message: String,
-    val id: String,
-    val userId: String,
-    val imageUrl: String,
-    val createdAt: String
-):Parcelable
+    val data: List<MyCatalog>
+):Parcelable {
+}
+
+@Parcelize
+data class MyCatalog(
+    val id: Int,
+    val userId: Int,
+    val type: String,
+    val image_url: String,
+    val created_at: String
+) : Parcelable

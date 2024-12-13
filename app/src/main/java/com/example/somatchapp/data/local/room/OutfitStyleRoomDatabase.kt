@@ -51,10 +51,11 @@ abstract class OutfitStyleRoomDatabase : RoomDatabase() {
             // Predefined data to insert
             val predefinedData = listOf(
                 OutfitStyle(1, "bag", null, null),
-                OutfitStyle(2, "top wear", null, null),
-                OutfitStyle(3, "accessories", null, null),
-                OutfitStyle(4, "bottom wear", null, null),
-                OutfitStyle(5, "footwear", null, null)
+                OutfitStyle(2, "upperwear", null, null),
+                OutfitStyle(3, "hat", null, null),
+                OutfitStyle(4, "bottomwear", null, null),
+                OutfitStyle(5, "footwear", null, null),
+                OutfitStyle(6, "hat", null, null)
             )
             outfitStyleDao.insertAll(predefinedData)
         }

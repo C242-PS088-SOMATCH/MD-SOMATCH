@@ -1,8 +1,8 @@
-package com.example.somatchapp.ui.ai_match
+package com.example.somatchapp.ui.scanner
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
+import android.content.Context.MODE_PRIVATE
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -24,9 +23,16 @@ import androidx.navigation.fragment.findNavController
 import com.example.somatchapp.R
 import com.example.somatchapp.data.local.OutfitStyleRoomDatabase
 import com.example.somatchapp.data.local.entity.OutfitStyle
+import com.example.somatchapp.data.local.room.MyCatalogRoomDatabase
+import com.example.somatchapp.data.remote.retrofit.ApiConfig
+import com.example.somatchapp.data.repository.MyCatalogRepository
 import com.example.somatchapp.data.repository.OutfitStyleRepository
 import com.example.somatchapp.databinding.FragmentRecommendationScannerBinding
+import com.example.utils.ScannerUtils
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -43,11 +49,6 @@ class ScannerFragment : Fragment(R.layout.fragment_recommendation_scanner) {
     private lateinit var outfitStyleRepository: OutfitStyleRepository
     private lateinit var itemType: String
     private lateinit var itemTitle: String
-
-    companion object {
-        private const val CAMERA_REQUEST_CODE = 1001
-        private const val GALLERY_REQUEST_CODE = 1002
-    }
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,11 +80,12 @@ class ScannerFragment : Fragment(R.layout.fragment_recommendation_scanner) {
 
         // Initialize buttonSave as hidden
         binding.buttonSave.visibility = View.GONE
+        binding.spinKit.visibility = View.GONE
 
         // Set the buttonSave click listener
         binding.buttonSave.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
-                saveImageToDatabase()
+                compressAndUploadImage()
                 findNavController().navigateUp()
             }
         }
@@ -100,18 +102,20 @@ class ScannerFragment : Fragment(R.layout.fragment_recommendation_scanner) {
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
-                val permission = getGalleryPermission()
-                if (permission == Manifest.permission.CAMERA) {
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_GRANTED
+                ) {
                     startCamera()
-                } else {
-                    openGallery()
+                } else if (ContextCompat.checkSelfPermission(requireContext(), getGalleryPermission())
+                    == PackageManager.PERMISSION_GRANTED
+                ) {
+                    openGallery() // Jika izin galeri diberikan, langsung buka galeri
                 }
             } else {
-                val permissionType =
-                    if (getGalleryPermission() == Manifest.permission.CAMERA) "Camera" else "Gallery"
-                Toast.makeText(requireContext(), "$permissionType permission is required", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Permission is required to proceed", Toast.LENGTH_SHORT).show()
             }
         }
+
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
@@ -173,25 +177,24 @@ class ScannerFragment : Fragment(R.layout.fragment_recommendation_scanner) {
         }
 
     private fun openGallery() {
-        val galleryPermission = getGalleryPermission()
-        if (ContextCompat.checkSelfPermission(requireContext(), galleryPermission)
+        if (ContextCompat.checkSelfPermission(requireContext(), getGalleryPermission())
             == PackageManager.PERMISSION_GRANTED
         ) {
-            // Izin diberikan, buka galeri
             galleryLauncher.launch("image/*")
         } else {
-            // Minta izin
-            requestPermissionLauncher.launch(galleryPermission)
+            requestPermissionLauncher.launch(getGalleryPermission())
         }
     }
 
     private fun getGalleryPermission(): String {
+        // Gunakan izin READ_MEDIA_IMAGES untuk Android 13+ atau READ_EXTERNAL_STORAGE untuk versi lama
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES
         } else {
             Manifest.permission.READ_EXTERNAL_STORAGE
         }
     }
+
 
     private fun displayImage() {
         savedUri?.let {
@@ -201,17 +204,73 @@ class ScannerFragment : Fragment(R.layout.fragment_recommendation_scanner) {
         }
     }
 
-    private suspend fun saveImageToDatabase() {
+    private suspend fun compressAndUploadImage() {
         savedUri?.let { uri ->
-            val outfitStyle = OutfitStyle(
-                type = itemType,
-                image = uri.toString()
-            )
-            outfitStyleRepository.insert(outfitStyle)
-            Toast.makeText(requireContext(), "Image saved to database", Toast.LENGTH_SHORT).show()
+            try {
+                // Menampilkan loading spinner
+                binding.spinKit.visibility = View.VISIBLE
 
-            // Hide save button after saving
+                // Kompres gambar menggunakan fungsi dari ScannerUtils
+                val compressedImageUri = ScannerUtils.compressImage(requireContext(), uri)
+
+                if (compressedImageUri != null) {
+                    val compressedImageFile = File(compressedImageUri.path!!)
+                    val sharedPreferences = requireContext().getSharedPreferences("user_preferences", MODE_PRIVATE)
+                    val token = sharedPreferences.getString("token", null)
+
+                    val apiService = ApiConfig().getApiService()
+                    val repository = MyCatalogRepository(apiService)
+
+                    // Buat MultipartBody.Part dari file hasil kompresi
+                    val requestFile = compressedImageFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                    val imagePart = MultipartBody.Part.createFormData("image", compressedImageFile.name, requestFile)
+
+                    // Siapkan bearer token untuk autentikasi (sesuaikan sumber token Anda)
+                    val bearerToken = "Bearer $token"
+
+                    // Panggil API untuk mengunggah gambar
+                    val response = repository.uploadImageToMyCatalog(
+                        bearerToken = bearerToken,
+                        image = imagePart,
+                        type = itemType
+                    )
+
+                    if (response.isSuccessful && response.body() != null) {
+                        val imageUrl = response.body()?.imageUrl ?: ""
+                        val catalogId = response.body()?.imageId ?: 0
+
+                        // Simpan ke database
+                        saveToDatabase(catalogId, imageUrl)
+                        Toast.makeText(requireContext(), "Image successfully uploaded", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Upload failed: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Failed to compress image", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.e("ScannerFragment", "Failed to upload image", e)
+            } finally {
+                // Sembunyikan loading spinner
+                binding.spinKit.visibility = View.GONE
+            }
+        } ?: run {
+            Toast.makeText(requireContext(), "No image to upload", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private suspend fun saveToDatabase(catalogId: Int, imageUrl: String) {
+        val outfitStyle = OutfitStyle(
+            type = itemType,
+            image = imageUrl,
+            myCatalogId = catalogId
+        )
+        try {
+            outfitStyleRepository.insert(outfitStyle)
             binding.buttonSave.visibility = View.GONE
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Failed to save to database: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 

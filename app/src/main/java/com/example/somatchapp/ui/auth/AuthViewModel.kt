@@ -32,7 +32,7 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
     fun register(name: String, email: String, username: String, password: String, onResult: (Response<RegisterResponse>) -> Unit) {
         viewModelScope.launch {
             try {
-                val response = userRepository.register(name, username, email, password)
+                val response = userRepository.register(name, email, username, password)
                 onResult(response)
             } catch (e: Exception) {
                 // Handle error

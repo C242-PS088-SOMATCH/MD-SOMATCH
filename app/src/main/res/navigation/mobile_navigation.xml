@@ -11,117 +11,165 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_navigation_home_to_deciderFragment"
-            app:destination="@id/chooserFragment" />
+            android:id="@+id/action_navigation_home_to_decider_fragment"
+            app:destination="@id/ai_chooser_fragment" />
         <action
-            android:id="@+id/action_navigation_home_to_myCatalogFragment"
-            app:destination="@id/myCatalogFragment" />
+            android:id="@+id/action_navigation_home_to_my_catalog_fragment"
+            app:destination="@id/my_catalog_fragment" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.somatchapp.ui.profile.ProfileFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_navigation_profile_to_my_catalog_fragment"
+            app:destination="@id/my_catalog_fragment" />
+        <action
+            android:id="@+id/action_navigation_profile_to_profile_setting_fragment"
+            app:destination="@id/profile_setting_fragment" />
+    </fragment>
 
     <fragment
-        android:id="@+id/chooserFragment"
+        android:id="@+id/ai_chooser_fragment"
         android:name="com.example.somatchapp.ui.ai_match.ChooserFragment"
         android:label="fragment_recommendation_decider"
         tools:layout="@layout/fragment_recommendation_chooser" >
         <action
-            android:id="@+id/action_deciderFragment_to_recommendationStylingFragment"
-            app:destination="@id/recommendationStylingFragment" />
+            android:id="@+id/action_decider_fragment_to_recommendation_styling_fragment"
+            app:destination="@id/recommendation_styling_fragment" />
         <action
-            android:id="@+id/action_chooserFragment_to_predictionStylingFragment"
-            app:destination="@id/predictionStylingFragment" />
+            android:id="@+id/action_chooser_fragment_to_prediction_styling_fragment"
+            app:destination="@id/prediction_styling_fragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/recommendationResultFragment"
+        android:id="@+id/recommendation_result_fragment"
         android:name="com.example.somatchapp.ui.ai_match.recommendation.result.RecommendationResultFragment"
         android:label="fragment_recommendation_result"
-        tools:layout="@layout/fragment_recommendation_result" />
+        tools:layout="@layout/fragment_recommendation_result" >
+        <action
+            android:id="@+id/action_recommendation_result_fragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
-        android:id="@+id/scannerFragment"
-        android:name="com.example.somatchapp.ui.ai_match.ScannerFragment"
+        android:id="@+id/scanner_fragment"
+        android:name="com.example.somatchapp.ui.scanner.ScannerFragment"
         android:label="fragment_recommendation_scanner"
         tools:layout="@layout/fragment_recommendation_scanner" >
         <action
-            android:id="@+id/action_scannerFragment_to_recommendationStylingFragment"
-            app:destination="@id/recommendationStylingFragment" />
+            android:id="@+id/action_scanner_fragment_to_recommendation_styling_fragment"
+            app:destination="@id/recommendation_styling_fragment" />
         <action
             android:id="@+id/action_refresh"
-            app:destination="@id/scannerFragment"
+            app:destination="@id/scanner_fragment"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
         <action
-            android:id="@+id/action_scannerFragment_to_myCatalogFragment"
-            app:destination="@id/myCatalogFragment" />
+            android:id="@+id/action_scanner_fragment_to_my_catalog_fragment"
+            app:destination="@id/my_catalog_fragment" />
         <argument
-            android:name="itemType"
+            android:name="item_type"
             app:argType="string" />
         <argument
-            android:name="itemTitle"
+            android:name="item_title"
             app:argType="string" />
     </fragment>
 
     <fragment
-        android:id="@+id/recommendationStylingFragment"
+        android:id="@+id/recommendation_styling_fragment"
         android:name="com.example.somatchapp.ui.ai_match.styling.StylingFragment"
         android:label="fragment_recommendation_styling"
         tools:layout="@layout/fragment_recommendation_styling" >
         <action
-            android:id="@+id/action_recommendationStylingFragment_to_scannerFragment"
-            app:destination="@id/scannerFragment" />
+            android:id="@+id/action_recommendation_styling_fragment_to_scanner_fragment"
+            app:destination="@id/scanner_fragment" />
         <action
-            android:id="@+id/action_recommendationStylingFragment_to_recommendationResultFragment"
-            app:destination="@id/recommendationResultFragment" />
+            android:id="@+id/action_recommendation_styling_fragment_to_recommendation_result_fragment"
+            app:destination="@id/recommendation_result_fragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/myCatalogFragment"
+        android:id="@+id/my_catalog_fragment"
         android:name="com.example.somatchapp.ui.my_catalog.MyCatalogFragment"
         android:label="fragment_my_catalog"
         tools:layout="@layout/fragment_my_catalog" >
         <action
-            android:id="@+id/action_myCatalogFragment_to_commonScannerFragment"
-            app:destination="@id/commonScannerFragment" />
+            android:id="@+id/action_my_catalog_fragment_to_common_scanner_fragment"
+            app:destination="@id/common_scanner_fragment" />
         <argument
-            android:name="itemType"
+            android:name="item_type"
             app:argType="string" />
     </fragment>
 
     <fragment
-        android:id="@+id/commonScannerFragment"
+        android:id="@+id/common_scanner_fragment"
         android:name="com.example.somatchapp.ui.scanner.CommonScannerFragment"
         android:label="fragment_scanner"
         tools:layout="@layout/fragment_scanner" >
         <action
-            android:id="@+id/action_commonScannerFragment_to_myCatalogFragment"
-            app:destination="@id/myCatalogFragment" />
+            android:id="@+id/action_common_scanner_fragment_to_my_catalog_fragment"
+            app:destination="@id/my_catalog_fragment" />
     </fragment>
+
     <activity
-        android:id="@+id/loginActivity"
+        android:id="@+id/login_activity"
         android:name="com.example.somatchapp.ui.auth.LoginActivity"
         android:label="activity_login"
         tools:layout="@layout/activity_login" />
+
     <activity
-        android:id="@+id/registerActivity"
+        android:id="@+id/register_activity"
         android:name="com.example.somatchapp.ui.auth.RegisterActivity"
         android:label="activity_register"
         tools:layout="@layout/activity_register" />
+
     <fragment
-        android:id="@+id/predictionStylingFragment"
+        android:id="@+id/prediction_styling_fragment"
         android:name="com.example.somatchapp.ui.ai_match.styling.PredictionStylingFragment"
         android:label="fragment_prediction_styling"
         tools:layout="@layout/fragment_prediction_styling" >
         <action
-            android:id="@+id/action_predictionStylingFragment_to_scannerFragment"
-            app:destination="@id/scannerFragment" />
+            android:id="@+id/action_prediction_styling_fragment_to_scanner_fragment"
+            app:destination="@id/scanner_fragment" />
+        <action
+            android:id="@+id/action_prediction_styling_fragment_to_predictionResultFragment"
+            app:destination="@id/prediction_result_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profile_setting_fragment"
+        android:name="com.example.somatchapp.ui.profile.ProfileSettingFragment"
+        android:label="fragment_profile_setting"
+        tools:layout="@layout/fragment_profile_setting" />
+
+    <fragment
+        android:id="@+id/starter_fragment"
+        android:name="com.example.somatchapp.ui.StarterFragment"
+        android:label="fragment_starter"
+        tools:layout="@layout/fragment_starter" >
+        <action
+            android:id="@+id/action_starter_fragment_to_login_activity"
+            app:destination="@id/login_activity" />
+        <action
+            android:id="@+id/action_starter_fragment_to_register_activity"
+            app:destination="@id/register_activity" />
+    </fragment>
+    <fragment
+        android:id="@+id/prediction_result_fragment"
+        android:name="com.example.somatchapp.ui.ai_match.prediction.result.PredictionResultFragment"
+        android:label="fragment_prediction_result"
+        tools:layout="@layout/fragment_prediction_result" >
+        <action
+            android:id="@+id/action_predictionResultFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_predictionResultFragment_to_prediction_styling_fragment"
+            app:destination="@id/prediction_styling_fragment" />
     </fragment>
 
 </navigation>

@@ -62,8 +62,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation (libs.material.v190)
-
     implementation (libs.guava)
 
     implementation (libs.ybq.android.spinkit)
@@ -75,6 +73,9 @@ dependencies {
 
     implementation (libs.glide)
     ksp (libs.compiler)
+    annotationProcessor (libs.glide.compiler)
+
+    implementation (libs.picasso)
 
     // Room components
     implementation(libs.androidx.room.runtime)

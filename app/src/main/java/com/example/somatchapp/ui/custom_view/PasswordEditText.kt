@@ -21,15 +21,19 @@ class PasswordEditText @JvmOverloads constructor(
     private var isPasswordVisible = false
 
     init {
+        // Gambar toggle untuk password visibility
         passwordToggleImage = ContextCompat.getDrawable(context, R.drawable.ic_visibility_24dp) as Drawable
         setOnTouchListener(this)
 
+        // Atur inputType default sebagai password
         inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
 
-        addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
+        // Atur hint default
+        hint = "Password"
 
+        // Tambahkan TextWatcher untuk validasi panjang password
+        addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.isNotEmpty()) {
                     showPasswordToggleButton()
@@ -44,15 +48,18 @@ class PasswordEditText @JvmOverloads constructor(
                 }
             }
 
-            override fun afterTextChanged(s: Editable) {
-            }
+            override fun afterTextChanged(s: Editable) {}
         })
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        hint = "Password"
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+    }
+
+    // Fungsi untuk mengatur hint secara dinamis
+    fun setHintText(hintText: String) {
+        hint = hintText
     }
 
     private fun showPasswordToggleButton() {
@@ -79,23 +86,16 @@ class PasswordEditText @JvmOverloads constructor(
 
             if (layoutDirection == View.LAYOUT_DIRECTION_RTL) {
                 passwordToggleStart = (passwordToggleImage.intrinsicWidth + paddingStart).toFloat()
-                when {
-                    event.x < passwordToggleStart -> isPasswordToggleClicked = true
-                }
+                if (event.x < passwordToggleStart) isPasswordToggleClicked = true
             } else {
                 passwordToggleStart = (width - paddingEnd - passwordToggleImage.intrinsicWidth).toFloat()
-
-                when {
-                    event.x > passwordToggleStart -> isPasswordToggleClicked = true
-                }
+                if (event.x > passwordToggleStart) isPasswordToggleClicked = true
             }
 
             if (isPasswordToggleClicked) {
-                when (event.action) {
-                    MotionEvent.ACTION_UP -> {
-                        togglePasswordVisibility()
-                        return true
-                    }
+                if (event.action == MotionEvent.ACTION_UP) {
+                    togglePasswordVisibility()
+                    return true
                 }
             }
         }

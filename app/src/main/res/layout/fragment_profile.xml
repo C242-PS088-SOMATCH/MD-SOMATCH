@@ -8,13 +8,9 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="112dp"
-        android:src="@drawable/dekorasi"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_profile_header"
         android:layout_marginBottom="16dp"/>
-
-    <!-- Header -->
-
-    <!-- Divider -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,7 +52,7 @@
             android:layout_height="72dp"
             android:layout_marginStart="16dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/profil_gambar" />
+            android:src="@drawable/image_user_profile" />
 
     </LinearLayout>
 
@@ -98,9 +94,9 @@
             android:layout_marginLeft="16dp">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/profile_setting"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_profile_setting"
                 android:layout_marginEnd="16dp" />
 
             <TextView
@@ -113,7 +109,7 @@
 
         <!-- Lemari Saya -->
         <LinearLayout
-            android:id="@+id/lemari"
+            android:id="@+id/my_catalog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -125,9 +121,9 @@
             android:layout_marginRight="16dp">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/wardrobe"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_my_catalog"
                 android:layout_marginEnd="16dp" />
 
             <TextView
@@ -146,7 +142,7 @@
 
         <!-- Keluar -->
         <LinearLayout
-            android:id="@+id/keluar"
+            android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -158,9 +154,9 @@
             android:layout_marginRight="16dp">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/logout"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_logout"
                 android:layout_marginEnd="16dp" />
 
             <TextView
@@ -173,7 +169,7 @@
 
         <!-- Hapus Akun -->
         <LinearLayout
-            android:id="@+id/hapus_akun"
+            android:id="@+id/delete_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -185,9 +181,9 @@
             android:layout_marginRight="16dp">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/Delete_account"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_delete_account"
                 android:layout_marginEnd="16dp" />
 
             <TextView

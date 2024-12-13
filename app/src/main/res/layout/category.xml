@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".kategori.CategoryActivity">
+    tools:context=".ui.kategori.CategoryActivity">
 
     <!-- Title -->
     <TextView
@@ -108,7 +108,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="368dp"
-        android:background="@drawable/rounded_full"
+        android:background="@drawable/bg_rounded_full"
         android:text="Lanjut"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

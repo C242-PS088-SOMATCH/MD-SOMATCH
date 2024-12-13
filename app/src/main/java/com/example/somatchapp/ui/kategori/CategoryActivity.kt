@@ -1,4 +1,4 @@
-package com.example.somatchapp.kategori
+package com.example.somatchapp.ui.kategori
 
 import android.os.Bundle
 import android.widget.CheckBox

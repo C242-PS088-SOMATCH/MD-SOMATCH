@@ -1,6 +1,5 @@
 package com.example.somatchapp.ui.ai_match.styling
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -8,13 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.somatchapp.R
 import com.example.somatchapp.data.local.OutfitStyleRoomDatabase
 import com.example.somatchapp.data.local.entity.OutfitStyle
@@ -54,12 +52,19 @@ class StylingFragment : Fragment() {
         stylingViewModel.allOutfitStyles.observe(viewLifecycleOwner, Observer { outfitStyles ->
             // Update UI with the latest data
             updateUI(outfitStyles)
+
+            // Enable nextButton if any image is not null
+            val isAnyImageNotNull = outfitStyles.any { it.image != null }
+            binding.nextButton.isEnabled = isAnyImageNotNull
         })
 
         setupClickListeners()
 
+        binding.nextButton.buttonText = "Lanjut"
+
+        // Setup nextButton click listener
         binding.nextButton.setOnClickListener {
-            navController.navigate(R.id.action_recommendationStylingFragment_to_recommendationResultFragment)
+            navController.navigate(R.id.action_recommendation_styling_fragment_to_recommendation_result_fragment)
         }
     }
 
@@ -68,13 +73,13 @@ class StylingFragment : Fragment() {
             navigateToScanner("bag", "Tas")
         }
         binding.ibTopwear.setOnClickListener {
-            navigateToScanner("top wear", "Atasan")
+            navigateToScanner("upperwear", "Atasan")
         }
         binding.ibBottomwear.setOnClickListener {
-            navigateToScanner("bottom wear", "Bawahan")
+            navigateToScanner("bottomwear", "Bawahan")
         }
-        binding.ibAccessories.setOnClickListener {
-            navigateToScanner("accessories", "Aksesoris")
+        binding.ibHat.setOnClickListener {
+            navigateToScanner("hat", "Topi")
         }
         binding.ibFootwear.setOnClickListener {
             navigateToScanner("footwear", "Alas Kaki")
@@ -91,13 +96,13 @@ class StylingFragment : Fragment() {
         outfitStyles.forEach { outfitStyle ->
             val imageUri = outfitStyle.image
 
-            Log.d("OutfitStyle", "Type: ${outfitStyle.type}, Image URI: $imageUri")
+            Log.d("OutfitStyle", "Type: ${outfitStyle.type}, Image URI: $imageUri, My Catalog ID: ${outfitStyle.myCatalogId}")
 
             when (outfitStyle.type) {
                 "bag" -> setImage(binding.ibBag, imageUri)
-                "top wear" -> setImage(binding.ibTopwear, imageUri)
-                "bottom wear" -> setImage(binding.ibBottomwear, imageUri)
-                "accessories" -> setImage(binding.ibAccessories, imageUri)
+                "upperwear" -> setImage(binding.ibTopwear, imageUri)
+                "bottomwear" -> setImage(binding.ibBottomwear, imageUri)
+                "hat" -> setImage(binding.ibHat, imageUri)
                 "footwear" -> setImage(binding.ibFootwear, imageUri)
             }
         }
@@ -107,22 +112,26 @@ class StylingFragment : Fragment() {
         if (imageUri != null) {
             try {
                 val uri = Uri.parse(imageUri)
-                imageView.setImageURI(uri)
+                Glide.with(imageView.context)
+                    .load(uri)
+                    .placeholder(R.drawable.ic_blank_gallery)
+                    .into(imageView)
             } catch (e: Exception) {
                 e.printStackTrace()
+                imageView.setImageResource(R.drawable.ic_blank_gallery) // Fallback jika terjadi exception
             }
         } else {
-            imageView.setImageResource(R.drawable.ic_add_style)
+            imageView.setImageResource(R.drawable.ic_add_style) // Default jika URI null
         }
     }
 
     private fun resetOutfitStyles() {
         val defaultOutfitStyles = listOf(
             OutfitStyle(1, "bag", null, null),
-            OutfitStyle(2, "top wear", null, null),
+            OutfitStyle(2, "upperwear", null, null),
             OutfitStyle(3, "accessories", null, null),
-            OutfitStyle(4, "bottom wear", null, null),
-            OutfitStyle(5, "footwear", null, null)
+            OutfitStyle(4, "bottomwear", null, null),
+            OutfitStyle(6, "hat", null, null)
         )
 
         stylingViewModel.deleteAll() // Hapus semua data lama

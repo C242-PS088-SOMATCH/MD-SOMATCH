@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -22,6 +23,8 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         enableEdgeToEdge()
 
@@ -41,6 +44,7 @@ class RegisterActivity : AppCompatActivity() {
 
         binding.buttonRegister.buttonText = "Daftar"
         binding.constraintProgressBar.visibility = View.GONE
+        binding.etsConfirmPassword.setHintText("Konfirmasi Password")
 
         binding.tvLogin.setOnClickListener {
             navigateToLogin()
@@ -60,7 +64,7 @@ class RegisterActivity : AppCompatActivity() {
 
             binding.constraintProgressBar.visibility = View.VISIBLE
             // Call register function
-            register(name, username, email, password)
+            register(name, email, username, password)
         }
     }
 
@@ -97,10 +101,10 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     // Register the user by calling the API
-    private fun register(name: String, username: String, email: String, password: String) {
+    private fun register(name: String, email: String, username: String, password: String) {
         // Show a loading indicator if needed (optional)
 
-        userViewModel.register(name, username, email, password) { response ->
+        userViewModel.register(name, email, username, password) { response ->
             binding.constraintProgressBar.visibility = View.GONE
             if (response.isSuccessful) {
                 // Handle success

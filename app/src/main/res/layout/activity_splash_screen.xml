@@ -6,9 +6,9 @@
     <!-- Logo di tengah -->
     <ImageView
         android:id="@+id/splashLogo"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:src="@drawable/logobaju"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
+        android:src="@drawable/ic_somatch_logo"
         android:layout_centerInParent="true" />
 
 </RelativeLayout>

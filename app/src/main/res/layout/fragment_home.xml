@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.ai_match.ScannerFragment">
+    tools:context=".ui.scanner.ScannerFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,11 +21,23 @@
                 android:id="@+id/title_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/hai_user"
+                android:text="@string/hai"
                 android:textStyle="bold"
-                android:textSize="32sp"
+                android:textSize="30sp"
                 android:layout_marginStart="16dp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/title_home_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/matcher"
+                android:textStyle="bold"
+                android:textColor="@color/purple_500"
+                android:textSize="30sp"
+                android:layout_marginStart="4dp"
+                app:layout_constraintStart_toEndOf="@id/title_home"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView

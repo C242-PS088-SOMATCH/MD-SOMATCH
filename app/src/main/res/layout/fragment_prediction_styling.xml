@@ -208,15 +208,51 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            android:paddingHorizontal="36dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/constraint_outfits" >
+
+            <ImageView
+                android:id="@+id/icon_hint"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_hint"
+                app:layout_constraintBottom_toTopOf="@id/hint_description"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="#DEDEDE" />
+
+            <TextView
+                android:id="@+id/hint_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_to_next"
+                android:layout_marginTop="6dp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textColor="#DEDEDE"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/icon_hint" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
             android:id="@+id/tv_note_heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/notes"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/constraint_outfits" />
+            app:layout_constraintTop_toBottomOf="@id/constraint_hint" />
 
         <TextView
             android:id="@+id/tv_styling_notes"
@@ -226,12 +262,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_note_heading" />
 
-        <Button
+        <com.example.somatchapp.ui.custom_view.StylingButton
             android:id="@+id/next_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/next"
-            android:background="@drawable/bg_rounded_full"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/tv_styling_notes" />
 

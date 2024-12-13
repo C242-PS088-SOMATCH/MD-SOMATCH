@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SoMatch App</string>
+    <string name="app_name">SoMatch</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -33,7 +33,8 @@
     <string name="save_confirmation">Konfirmasi Penyimpanan</string>
     <string name="colors">#Warna-warna</string>
     <string name="style_name">Nama Style</string>
-    <string name="hai_user">Hai, User!</string>
+    <string name="hai">Hai,</string>
+    <string name="user">User</string>
     <string name="style_for_you">Style fashion untuk kamu</string>
     <string name="product_list">Daftar Produk</string>
 
@@ -64,5 +65,11 @@
     <string name="topwear">Atasan</string>
     <string name="bag">Tas</string>
     <string name="footwear">Alas Kaki</string>
+    <string name="matcher">Matcher!</string>
+    <string name="hint_to_next">Harus memasukan pakaian pada atasan dan bawahan untuk melanjutkan</string>
+    <string name="hint_to_next_recommendation">Harus memasukan minimal 1 untuk melanjutkan</string>
+    <string name="model_still_cooking">Model sedang memasak</string>
+    <string name="result_description">Hasil prediksi kecocokan pakaian</string>
+    <string name="match">Cocok</string>
 
 </resources>
