@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SoMatch App</string>
+    <string name="app_name">SoMatch</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -17,12 +17,13 @@
     <string name="styling_page_descriptions">Silahkan masukkan gambar sesuai dengan ilustrasi yang ditunjukan</string>
     <string name="hat">Topi</string>
     <string name="outer">Luaran</string>
-    <string name="Bottomwear">Bawahan</string>
+    <string name="bottomwear">Bawahan</string>
     <string name="glasses">Kacamata</string>
     <string name="clothes">Baju</string>
     <string name="watch">Jam tangan</string>
     <string name="shoes">Sepatu</string>
     <string name="styling_notes">Gambar yang sesuai dengan ilustrasi akan memudahkan kami untuk memberikan rekomendasi terbaik</string>
+    <string name="prediction_notes">Gambar yang sesuai dengan ilustrasi akan memudahkan kami untuk memberikan prediksi terbaik</string>
     <string name="notes">Catatan</string>
     <string name="next">Lanjut</string>
     <string name="save">Simpan</string>
@@ -32,11 +33,43 @@
     <string name="save_confirmation">Konfirmasi Penyimpanan</string>
     <string name="colors">#Warna-warna</string>
     <string name="style_name">Nama Style</string>
-    <string name="hai_user">Hai, User!</string>
+    <string name="hai">Hai,</string>
+    <string name="user">User</string>
     <string name="style_for_you">Style fashion untuk kamu</string>
     <string name="product_list">Daftar Produk</string>
+
+    <string name="product_title">Basic Shirt</string>
+    <string name="hastag">#warna putih</string>
+    <string name="deskripsi">baju kemeja</string>
+
     <string name="number_example">3</string>
     <string name="title_your_outfit">Pakaian milik kamu</string>
     <string name="title_your_combination">Kombinasi pakaianmu</string>
     <string name="add_outfits">Tambah Pakaian</string>
+    <string name="save_button">Save Button</string>
+    <string name="welcome_back">Selamat datang kembali!</string>
+    <string name="header_hi">Hai!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="not_have_account">Belum punya akun?</string>
+    <string name="regist">Daftar</string>
+    <string name="sign_in_with_google">Masuk dengan Google</string>
+    <string name="or_with">atau dengan</string>
+    <string name="login">Masuk</string>
+    <string name="welcome">Selamat datang!</string>
+    <string name="username">Username</string>
+    <string name="have_an_account">Sudah memiliki akun?</string>
+    <string name="regist_with_google">Daftar dengan Google</string>
+    <string name="hint_description">Pilih pakaian milik kamu untuk digunakan sebagai pakaian yang ingin diberikan rekomendasi!</string>
+    <string name="password_not_match">Mohon masukan password yang sama</string>
+    <string name="topwear">Atasan</string>
+    <string name="bag">Tas</string>
+    <string name="footwear">Alas Kaki</string>
+    <string name="matcher">Matcher!</string>
+    <string name="hint_to_next">Harus memasukan pakaian pada atasan dan bawahan untuk melanjutkan</string>
+    <string name="hint_to_next_recommendation">Harus memasukan minimal 1 untuk melanjutkan</string>
+    <string name="model_still_cooking">Model sedang memasak</string>
+    <string name="result_description">Hasil prediksi kecocokan pakaian</string>
+    <string name="match">Cocok</string>
+
 </resources>

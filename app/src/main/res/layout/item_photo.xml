@@ -1,0 +1,46 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Gambar dari Fragment Kedua -->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_marginHorizontal="8dp"
+        android:adjustViewBounds="false"
+        android:scaleType="centerCrop"
+        android:clipToOutline="true"
+        android:src="@drawable/image_recommendation_outfit_illustration"
+        android:background="@drawable/bg_card_round" />
+
+    <!-- Fragment Pertama (Tombol Plus) -->
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"/>
+
+    <!-- Foto -->
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="@drawable/bg_card_round"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="false"
+        tools:visibility="visible" />
+
+    <!-- Tombol Plus -->
+    <ImageView
+        android:id="@+id/ivAddPhoto"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:background="@drawable/ic_plus_background"
+        android:padding="24dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_plus"
+        android:contentDescription="Add Photo" />
+</FrameLayout>

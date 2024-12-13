@@ -4,6 +4,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
+    id("kotlin-kapt")
 }
 
 android {
@@ -56,10 +57,25 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation (libs.androidx.camera.camera2)
     implementation(libs.androidx.room.common)
+    implementation(libs.androidx.activity)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
     implementation (libs.guava)
+
+    implementation (libs.ybq.android.spinkit)
+
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.okhttp)
+    implementation (libs.logging.interceptor)
+
+    implementation (libs.glide)
+    ksp (libs.compiler)
+    annotationProcessor (libs.glide.compiler)
+
+    implementation (libs.picasso)
 
     // Room components
     implementation(libs.androidx.room.runtime)

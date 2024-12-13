@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ui.kategori.CategoryActivity">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pilih Kategori Style"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pilih minimal satu style favoritmu!"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- GridLayout for Checkboxes -->
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:columnCount="3"
+        android:rowCount="3"
+        android:alignmentMode="alignMargins"
+        android:useDefaultMargins="true"
+        app:layout_constraintTop_toBottomOf="@id/subtitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <CheckBox
+            android:id="@+id/checkBoxColorful"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Colorful" />
+
+        <CheckBox
+            android:id="@+id/checkBoxEarthTone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Earth Tone" />
+
+        <CheckBox
+            android:id="@+id/checkBoxMinimalist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Minimalist" />
+
+        <CheckBox
+            android:id="@+id/checkBoxNeutral"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Neutral" />
+
+        <CheckBox
+            android:id="@+id/checkBoxMonochrome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monochrome" />
+
+        <CheckBox
+            android:id="@+id/checkBoxPastel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pastel" />
+
+        <CheckBox
+            android:id="@+id/checkBoxFloral"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Floral" />
+
+        <CheckBox
+            android:id="@+id/checkBoxBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bold" />
+
+        <CheckBox
+            android:id="@+id/checkBoxVintage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vintage" />
+    </GridLayout>
+
+    <!-- Button Skip -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnLanjut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="368dp"
+        android:background="@drawable/bg_rounded_full"
+        android:text="Lanjut"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gridLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

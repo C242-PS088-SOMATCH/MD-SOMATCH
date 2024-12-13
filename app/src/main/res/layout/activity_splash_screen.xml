@@ -1,0 +1,14 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#A471F5"> <!-- Pastikan warna terdefinisi di colors.xml -->
+
+    <!-- Logo di tengah -->
+    <ImageView
+        android:id="@+id/splashLogo"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
+        android:src="@drawable/ic_somatch_logo"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>
